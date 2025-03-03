@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Explicación del Proyecto Tetris</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <style>
+      .code-block {
+        background-color: #f8f9fa;
+        border-radius: 6px;
+        padding: 20px;
+        margin-bottom: 20px;
+        overflow-x: auto;
+      }
+      .function-diagram {
+        background-color: #f0f8ff;
+        border-left: 4px solid #007bff;
+        padding: 15px;
+        margin-bottom: 20px;
+      }
+      .highlight {
+        background-color: #fffacd;
+        font-weight: bold;
+      }
+      .section-divider {
+        height: 3px;
+        background-color: #f0f0f0;
+        margin: 40px 0;
+      }
+    </style>
+  </head>
+  <body class="bg-light">
+    <header>
+      <nav class="navbar navbar-expand navbar-dark bg-dark">
+        <div class="container">
+          <a class="navbar-brand" href="index.html">Tetris</a>
+          <ul class="nav navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Historia</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="tetris.html">Jugar Tetris</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="explicacion.html">Explicación Técnica</a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container mt-5">
+      <div class="row mb-5">
+        <div class="col-12 text-center">
+          <h1 class="display-4">Documentación Técnica: Proyecto Tetris</h1>
+          <p class="lead">
+            Informe detallado de la implementación y arquitectura del juego
+          </p>
+        </div>
+      </div>
+
+      <section class="row mb-4">
+        <div class="col-12">
+          <div class="card shadow">
+            <div class="card-body">
+              <h2 class="card-title">Resumen Ejecutivo</h2>
+              <p>
+                Este proyecto consiste en una implementación web del clásico juego Tetris utilizando HTML, CSS y JavaScript vanilla. La aplicación se ha desarrollado siguiendo principios de diseño modular y se estructura en tres partes principales:
+              </p>
+              <ul>
+                <li><strong>Interfaz de usuario</strong>: Construida con HTML5 y Bootstrap 5 para un diseño responsivo</li>
+                <li><strong>Lógica del juego</strong>: Implementada en JavaScript con un enfoque funcional</li>
+                <li><strong>Presentación</strong>: Estilizada con CSS personalizado para una experiencia visual atractiva</li>
+              </ul>
+              <p>
+                El proyecto también incluye una página informativa sobre la historia del Tetris, proporcionando contexto cultural e histórico al usuario.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <section class="row mb-4">
+        <div class="col-12">
+          <h2>Arquitectura del Sistema</h2>
+          <div class="card shadow mb-4">
+            <div class="card-header bg-primary text-white">
+              <h3 class="card-title mb-0">Estructura de Archivos</h3>
+            </div>
+            <div class="card-body">
+              <ul>
+                <li><strong>index.html</strong>: Página principal con la historia del Tetris</li>
+                <li><strong>tetris.html</strong>: Página del juego con el tablero y controles</li>
+                <li><strong>script.js</strong>: Lógica principal del juego</li>
+                <li><strong>style.css</strong>: Estilos específicos para el juego</li>
+                <li><strong>README.md</strong>: Documentación técnica de las funciones</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+              <h3 class="card-title mb-0">Constantes y Variables Globales</h3>
+            </div>
+            <div class="card-body">
+              <div class="code-block">
+                <pre>
+const BOARD_WIDTH = 10;
+const BOARD_HEIGHT = 20;
+const EMPTY = 0;
+
+// Variables globales
+let board = [];
+let currentPiece = null;
+let currentPiecePosition = {x: 0, y: 0};
+let score = 0;
+let gameInterval = null;
+let gameOver = false;
+                </pre>
+              </div>
+              <p>
+                El juego utiliza un sistema de coordenadas basado en una matriz bidimensional de 10x20 (ancho x alto). Cada celda puede estar vacía (valor 0) o contener un color que representa una pieza fijada en el tablero.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <section class="row mb-4">
+        <div class="col-12">
+          <h2>Funcionalidades Principales</h2>
+          
+          <div class="card shadow mb-4">
+            <div class="card-header bg-success text-white">
+              <h3 class="card-title mb-0">1. Inicialización del Juego</h3>
+            </div>
+            <div class="card-body">
+              <div class="function-diagram">
+                <h4>Función: startGame()</h4>
+                <p>Esta función es el punto de entrada para comenzar o reiniciar el juego:</p>
+                <ul>
+                  <li>Limpia cualquier juego anterior si existe</li>
+                  <li>Reinicia variables (puntuación, estado de juego)</li>
+                  <li>Inicializa el tablero y crea la primera pieza</li>
+                  <li>Configura los controladores de eventos para el teclado</li>
+                  <li>Establece un intervalo para el descenso automático de las piezas</li>
+                </ul>
+              </div>
+              
+              <div class="function-diagram">
+                <h4>Función: createBoard()</h4>
+                <p>Genera la matriz bidimensional que representa el tablero de juego:</p>
+                <ul>
+                  <li>Crea un array de BOARD_HEIGHT filas</li>
+                  <li>Cada fila contiene BOARD_WIDTH celdas inicializadas como vacías (EMPTY)</li>
+                  <li>Actualiza la representación visual del tablero</li>
+                </ul>
+              </div>
+
+              <div class="alert alert-info">
+                <strong>Nota técnica:</strong> Se utiliza Array.fill() y map() para crear arrays independientes para cada fila, evitando problemas de referencia que podrían hacer que todas las filas apunten al mismo array.
+              </div>
+            </div>
+          </div>
+
+          <div class="card shadow mb-4">
+            <div class="card-header bg-success text-white">
+              <h3 class="card-title mb-0">2. Gestión de Piezas</h3>
+            </div>
+            <div class="card-body">
+              <h4>Tipos de Piezas del Tetris</h4>
+              <p>El juego implementa las 7 piezas clásicas del Tetris, cada una con su forma y color distintivos:</p>
+              
+              <div class="row mb-4">
+                <div class="col-md-6">
+                  <div class="code-block">
+                    <pre>
+const SHAPES = {
+    I: [[1, 1, 1, 1]],
+    L: [[1, 0], [1, 0], [1, 1]],
+    J: [[0, 1], [0, 1], [1, 1]],
+    O: [[1, 1], [1, 1]],
+    Z: [[1, 1, 0], [0, 1, 1]],
+    S: [[0, 1, 1], [1, 1, 0]],
+    T: [[1, 1, 1], [0, 1, 0]]
+};
+                    </pre>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="code-block">
+                    <pre>
+const COLORS = {
+    I: 'cyan',
+    L: 'orange',
+    J: 'blue',
+    O: 'yellow',
+    Z: 'red',
+    S: 'green',
+    T: 'purple'
+};
+                    </pre>
+                  </div>
+                </div>
+              </div>
+
+              <div class="function-diagram">
+                <h4>Función: createPiece()</h4>
+                <p>Genera una nueva pieza aleatoria y la coloca en la parte superior del tablero:</p>
+                <ul>
+                  <li>Selecciona aleatoriamente una de las siete piezas disponibles</li>
+                  <li>Crea un objeto con la forma y el color correspondientes</li>
+                  <li>Posiciona la pieza en el centro superior del tablero</li>
+                  <li>Verifica si la pieza puede ser colocada; si no, determina que el juego ha terminado</li>
+                </ul>
+              </div>
+
+              <div class="function-diagram">
+                <h4>Función: rotatePiece()</h4>
+                <p>Rota la pieza actual 90 grados en sentido horario:</p>
+                <ul>
+                  <li>Utiliza transformaciones de matriz para rotarla (map + reverse)</li>
+                  <li>Guarda la forma original como respaldo</li>
+                  <li>Verifica si la rotación es válida; si no, restaura la forma original</li>
+                  <li>Actualiza la vista si la rotación es exitosa</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="card shadow mb-4">
+            <div class="card-header bg-success text-white">
+              <h3 class="card-title mb-0">3. Mecánica del Juego</h3>
+            </div>
+            <div class="card-body">
+              <div class="function-diagram">
+                <h4>Función: isValidMove(x, y)</h4>
+                <p>Verifica si un movimiento es válido antes de ejecutarlo:</p>
+                <ul>
+                  <li>Recorre cada celda de la forma de la pieza actual</li>
+                  <li>Calcula la nueva posición (x, y) en el tablero</li>
+                  <li>Comprueba colisiones con los bordes del tablero</li>
+                  <li>Comprueba colisiones con otras piezas ya colocadas</li>
+                </ul>
+              </div>
+
+              <div class="function-diagram">
+                <h4>Función: moveDown()</h4>
+                <p>Mueve la pieza una posición hacia abajo o la fija si no puede descender más:</p>
+                <ul>
+                  <li>Verifica si el movimiento hacia abajo es válido</li>
+                  <li>Si es válido, incrementa la posición Y y actualiza la vista</li>
+                  <li>Si no es válido, fija la pieza en el tablero, limpia líneas completas y genera una nueva pieza</li>
+                </ul>
+              </div>
+
+              <div class="function-diagram">
+                <h4>Funciones: moveLeft() y moveRight()</h4>
+                <p>Mueven la pieza horizontalmente si es posible:</p>
+                <ul>
+                  <li>Comprueban si el movimiento lateral es válido</li>
+                  <li>Actualizan la posición X correspondiente</li>
+                  <li>Refrescan la vista del tablero</li>
+                </ul>
+              </div>
+
+              <div class="function-diagram">
+                <h4>Función: mergePiece()</h4>
+                <p>Fija la pieza actual en el tablero cuando ya no puede moverse más:</p>
+                <ul>
+                  <li>Recorre la forma de la pieza celda por celda</li>
+                  <li>Calcula la posición absoluta en el tablero</li>
+                  <li>Asigna el color de la pieza a las celdas correspondientes del tablero</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="card shadow mb-4">
+            <div class="card-header bg-success text-white">
+              <h3 class="card-title mb-0">4. Sistema de Puntuación</h3>
+            </div>
+            <div class="card-body">
+              <div class="function-diagram">
+                <h4>Función: clearLines()</h4>
+                <p>Identifica y elimina líneas completas, otorgando puntos al jugador:</p>
+                <ul>
+                  <li>Recorre el tablero desde abajo hacia arriba</li>
+                  <li>Verifica si una fila está completamente llena (sin celdas vacías)</li>
+                  <li>Elimina la fila completa y añade una nueva fila vacía en la parte superior</li>
+                  <li>Suma 100 puntos por cada línea eliminada y actualiza el marcador</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="card shadow mb-4">
+            <div class="card-header bg-success text-white">
+              <h3 class="card-title mb-0">5. Interfaz de Usuario</h3>
+            </div>
+            <div class="card-body">
+              <div class="function-diagram">
+                <h4>Función: updateBoardView()</h4>
+                <p>Actualiza la representación visual del tablero en la interfaz:</p>
+                <ul>
+                  <li>Borra el contenido actual del elemento HTML del tablero</li>
+                  <li>Crea una copia temporal del tablero para visualización</li>
+                  <li>Añade la pieza actual a la copia del tablero (sin modificar el estado real)</li>
+                  <li>Crea elementos div para cada celda, aplicando el color correspondiente</li>
+                </ul>
+              </div>
+
+              <div class="function-diagram">
+                <h4>Función: handleKeyPress(event)</h4>
+                <p>Gestiona los eventos de teclado para controlar el juego:</p>
+                <ul>
+                  <li>Ignora los eventos si el juego ha terminado</li>
+                  <li>ArrowLeft: mueve la pieza a la izquierda</li>
+                  <li>ArrowRight: mueve la pieza a la derecha</li>
+                  <li>ArrowDown: acelera el descenso de la pieza</li>
+                  <li>ArrowUp: rota la pieza en sentido horario</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <section class="row mb-5">
+        <div class="col-12">
+          <h2>Flujo de Ejecución</h2>
+          <div class="card shadow">
+            <div class="card-body">
+              <ol>
+                <li>El usuario inicia el juego haciendo clic en el botón "NEW GAME"</li>
+                <li>La función <span class="highlight">startGame()</span> inicializa el tablero y variables</li>
+                <li>Se crea la primera pieza aleatoria con <span class="highlight">createPiece()</span></li>
+                <li>El <span class="highlight">gameInterval</span> hace que la pieza descienda automáticamente cada segundo</li>
+                <li>El usuario controla la pieza con las teclas de dirección</li>
+                <li>Cuando una pieza no puede descender más, se fija en el tablero con <span class="highlight">mergePiece()</span></li>
+                <li>Se comprueban las líneas completas con <span class="highlight">clearLines()</span> y se otorgan puntos</li>
+                <li>Se genera una nueva pieza y continúa el ciclo</li>
+                <li>El juego termina cuando una nueva pieza no puede ser colocada en el tablero</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="section-divider"></div>
+
+      <section class="row mb-5">
+        <div class="col-md-6">
+          <div class="card shadow h-100">
+            <div class="card-header bg-info text-white">
+              <h3 class="card-title mb-0">Aspectos Técnicos Destacables</h3>
+            </div>
+            <div class="card-body">
+              <ul>
+                <li><strong>Diseño modular</strong>: Funciones con responsabilidades únicas y bien definidas</li>
+                <li><strong>Optimización del rendimiento</strong>: Uso de una copia temporal del tablero para visualización</li>
+                <li><strong>Prevención de errores</strong>: Validación de movimientos antes de ejecutarlos</li>
+                <li><strong>Legibilidad del código</strong>: Uso de constantes y nombres descriptivos</li>
+                <li><strong>Responsividad</strong>: Integración con Bootstrap para una experiencia adaptable</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="card shadow h-100">
+            <div class="card-header bg-warning text-dark">
+              <h3 class="card-title mb-0">Posibles Mejoras Futuras</h3>
+            </div>
+            <div class="card-body">
+              <ul>
+                <li><strong>Sistema de niveles</strong>: Aumentar la velocidad de descenso con la puntuación</li>
+                <li><strong>Vista previa</strong>: Mostrar la siguiente pieza que aparecerá</li>
+                <li><strong>Guardado de récords</strong>: Implementar LocalStorage para guardar mejores puntuaciones</li>
+                <li><strong>Efectos sonoros</strong>: Añadir retroalimentación auditiva para acciones del juego</li>
+                <li><strong>Modalidad multijugador</strong>: Implementar competición entre dos jugadores</li>
+                <li><strong>Adaptación móvil</strong>: Añadir controles táctiles para dispositivos móviles</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+
+  </body>
+</html>
